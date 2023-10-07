@@ -1,0 +1,38 @@
+name: 'Trigger specific GitHub workflow'
+description: 'Triggers a specific GitHub workflow that supports the `workflow_dispatch` event'
+
+inputs:
+  repository:
+    description: 'GitHub repository of the workflow to trigger'
+    required: true
+    default: ${{ github.repository }}
+  workflow:
+    description: 'Name, ID or file name of the workflow to trigger'
+    required: true
+  branch:
+    description: 'Branch for which to trigger the workflow'
+    required: true
+    default: ${{ github.ref_name }}
+  inputs:
+    description: 'Optional inputs to pass to the workflow (JSON-encoded string)'
+    required: false
+    default: '{}'
+  token:
+    description: 'GitHub token used for authentication'
+    required: true
+    default: ${{ github.token }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Trigger workflow'
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+      run: |
+        echo "${{ inputs.inputs }}" \
+          | gh workflow run \
+            --repo "${{ inputs.repository }}" \
+            --ref "${{ inputs.branch }}" \
+            --json \
+            "${{ inputs.workflow }}"
+      shell: 'bash'
