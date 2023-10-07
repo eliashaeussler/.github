@@ -32,7 +32,7 @@ jobs:
     steps:
       - name: Check if PR exists
         id: check
-        uses: eliashaeussler/.github/actions/github/check-pr@1.0.1
+        uses: eliashaeussler/.github/actions/github/check-pr@1.1.0
 ```
 
 #### Inputs
@@ -67,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger CGL workflow
-        uses: eliashaeussler/.github/actions/github/trigger-workflow@1.0.1
+        uses: eliashaeussler/.github/actions/github/trigger-workflow@1.1.0
         with:
           workflow: cgl.yaml
 ```
