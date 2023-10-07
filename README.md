@@ -24,12 +24,6 @@ This action checks if any open pull request exists with the current branch as
 #### Example
 
 ```yaml
-name: Renovate
-on:
-  push:
-    branches:
-      - 'renovate/**'
-
 jobs:
   check-pr:
     runs-on: ubuntu-latest
@@ -39,16 +33,6 @@ jobs:
       - name: Check if PR exists
         id: check
         uses: eliashaeussler/.github/actions/github/check-pr@1.0.1
-
-  trigger-cgl:
-    needs: check-pr
-    if: '!needs.check-pr.outputs.pr-exists'
-    uses: ./.github/workflows/cgl.yaml
-
-  trigger-tests:
-    needs: check-pr
-    if: '!needs.check-pr.outputs.pr-exists'
-    uses: ./.github/workflows/tests.yaml
 ```
 
 #### Inputs
@@ -66,8 +50,45 @@ jobs:
 | `pr-exists` | Flag to indicate whether an open PR exists |
 | `pr-url`    | URL to an open PR if any exists            |
 
+### `eliashaeussler/.github/actions/github/trigger-workflow`
+
+This action triggers a specific GitHub workflow that supports the
+[`workflow_dispatch`][2] event.
+
+#### Reference
+
+[`actions/github/trigger-workflow/action.yml`](actions/github/trigger-workflow/action.yml)
+
+#### Example
+
+```yaml
+jobs:
+  trigger-cgl:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger CGL workflow
+        uses: eliashaeussler/.github/actions/github/trigger-workflow@1.0.1
+        with:
+          workflow: cgl.yaml
+```
+
+#### Inputs
+
+| Name         | Required | Description                                                   | Default value              |
+|--------------|----------|---------------------------------------------------------------|----------------------------|
+| `repository` | ✅        | Hub repository of the workflow to trigger                     | `${{ github.repository }}` |
+| `workflow`   | ✅        | Name, ID or file name of the workflow to trigger              | –                          |
+| `branch`     | ✅        | Branch for which to trigger the workflow                      | `${{ github.ref_name }}`   |
+| `inputs`     | –        | Optional inputs to pass to the workflow (JSON-encoded string) | `{}`                       |
+| `token`      | ✅        | GitHub token used for authentication                          | `${{ github.token }}`      |
+
+#### Outputs
+
+*None*
+
 ## ⭐ License
 
 This project is licensed under [GNU General Public License 3.0 (or later)](LICENSE).
 
 [1]: https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
+[2]: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
