@@ -1,0 +1,20 @@
+name: CGL
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  cgl:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
+        with:
+          fetch-depth: 0
+
+      # Linting
+      - name: Lint .editorconfig
+        uses: greut/eclint-action@v0.4.0
+      - name: Lint YAML files
+        uses: ibiqlik/action-yamllint@v3.1.1

@@ -1,0 +1,51 @@
+name: 'Check if PR exists for the current branch'
+description: 'Checks if any open PR exists with the current branch as head'
+
+inputs:
+  repository:
+    description: 'GitHub repository to check for an open PR'
+    required: true
+    default: ${{ github.repository }}
+  branch:
+    description: 'Branch to check for an open PR'
+    required: true
+    default: ${{ github.ref_name }}
+  token:
+    description: 'GitHub token used for authentication'
+    required: true
+    default: ${{ github.token }}
+
+outputs:
+  pr-exists:
+    description: 'Flag to indicate whether an open PR exists'
+    value: ${{ steps.check.outputs.pr-exists }}
+  pr-url:
+    description: 'URL to an open PR if any exists'
+    value: ${{ steps.check.outputs.pr-url }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Check if PR exists'
+      id: check
+      continue-on-error: true
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+      run: |
+        pr_url="$(gh pr view --repo "${{ inputs.repository }}" --json state,url --jq 'if .state == "OPEN" then .url else null end' "${{ inputs.branch }}")"
+
+        if [ -n "$pr_url" ]; then
+          # Create summary
+          {
+            echo "### :white_check_mark: Check result"
+            echo ""
+            echo "Found open PR: ${pr_url}"
+          } >> $GITHUB_STEP_SUMMARY
+
+          # Add outputs
+          {
+            echo "pr-exists=1"
+            echo "pr-url=${pr_url}"
+          } >> $GITHUB_OUTPUT
+        fi
+      shell: 'bash'
