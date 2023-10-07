@@ -19,3 +19,7 @@ indent_style = tab
 # YAML-Files
 [*.{yaml,yml}]
 indent_size = 2
+
+# Markdown-Files
+[*.md]
+indent_size = 2
