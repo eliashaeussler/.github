@@ -21,3 +21,9 @@ jobs:
             -exclude LICENSE
       - name: Lint YAML files
         uses: ibiqlik/action-yamllint@v3.1.1
+        with:
+          config_data: |
+            extends: default
+            rules:
+              document-start: disable
+              line-length: disable
