@@ -1,0 +1,20 @@
+name: Renovate
+on:
+  push:
+    branches:
+      - 'renovate/**'
+
+jobs:
+  check-pr:
+    runs-on: ubuntu-latest
+    outputs:
+      pr-exists: ${{ steps.check.outputs.pr-exists }}
+    steps:
+      - name: Check if PR exists
+        id: check
+        uses: eliashaeussler/.github/actions/github/check-pr@main
+
+  trigger-cgl:
+    needs: check-pr
+    if: '!needs.check-pr.outputs.pr-exists'
+    uses: ./.github/workflows/cgl.yaml
