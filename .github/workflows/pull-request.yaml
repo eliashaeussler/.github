@@ -1,0 +1,25 @@
+name: Pull Request
+on:
+  workflow_call:
+    outputs:
+      continue:
+        description: 'Continue workflow for current pull request'
+        value: ${{ jobs.check.outputs.continue }}
+
+jobs:
+  check:
+    name: Check workflow execution
+    runs-on: ubuntu-latest
+    outputs:
+      continue: ${{ steps.continue.outputs.continue }}
+    steps:
+      - id: continue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            if (context.eventName === 'pull_request') {
+              const payload = context.payload.pull_request;
+              core.setOutput('continue', payload.base.repo.owner.login !== payload.head.repo.owner.login);
+            } else {
+              core.setOutput('continue', true);
+            }
