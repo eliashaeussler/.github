@@ -21,6 +21,6 @@ jobs:
 
       # Create release
       - name: Create release
-        uses: ncipollo/release-action@v1
+        uses: softprops/action-gh-release@v2
         with:
-          generateReleaseNotes: true
+          generate_release_notes: true
