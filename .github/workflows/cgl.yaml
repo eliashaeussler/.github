@@ -12,12 +12,12 @@ jobs:
 
       # Linting
       - name: Lint .editorconfig
-        uses: greut/eclint-action@v0.5.0
+        uses: greut/eclint-action@b9844795dd0b5fb19e3c60bd731fd3e548524b5c # v0.5.0
         with:
           eclint_args: |
             -exclude LICENSE
       - name: Lint YAML files
-        uses: ibiqlik/action-yamllint@v3.1.1
+        uses: ibiqlik/action-yamllint@2576378a8e339169678f9939646ee3ee325e845c # v3.1.1
         with:
           config_data: |
             extends: default
